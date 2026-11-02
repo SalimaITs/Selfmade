@@ -1,0 +1,577 @@
+<title>ShiftSafe</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: live product demo as the hero (phone beside the thesis), then the security-lead dashboard, process, privacy, pricing, pilot request. Hi-vis amber = the safety vest of frontline work. */
+:root{
+  --bg:#F2F5F4; --surface:#FFFFFF; --sunk:#E7EDEB; --ink:#0F2A2E; --muted:#55696B; --line:#D3DDDB;
+  --accent:#E8A317; --accent-ink:#7E5200; --on-accent:#1B1404;
+  --teal:#136F6A; --danger:#BE3B27; --ok:#1F7F55; --warn:#9A6410;
+  --danger-bg:#FBE9E5; --ok-bg:#E3F3EB; --warn-bg:#FBF0DC;
+  --phone:#0F2A2E;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Noto Sans", "Noto Sans Arabic", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0B181A; --surface:#122427; --sunk:#0E1E21; --ink:#E5EEED; --muted:#93A8A7; --line:#22393C;
+  --accent:#F2B437; --accent-ink:#F2B437; --on-accent:#1B1404;
+  --teal:#4CBFB4; --danger:#F27A64; --ok:#4FC48C; --warn:#E5AA4C;
+  --danger-bg:#3A1E19; --ok-bg:#15332A; --warn-bg:#3A2C14;
+  --phone:#050D0E; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0B181A; --surface:#122427; --sunk:#0E1E21; --ink:#E5EEED; --muted:#93A8A7; --line:#22393C;
+  --accent:#F2B437; --accent-ink:#F2B437; --on-accent:#1B1404;
+  --teal:#4CBFB4; --danger:#F27A64; --ok:#4FC48C; --warn:#E5AA4C;
+  --danger-bg:#3A1E19; --ok-bg:#15332A; --warn-bg:#3A2C14;
+  --phone:#050D0E; color-scheme:dark }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important;animation:none!important} }
+body{background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.55}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:10; background:var(--bg)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:6px}
+h1,h2,h3{font-family:var(--f-display); line-height:1.08; text-wrap:balance; margin:0}
+.wrap{max-width:1160px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px))}
+.eyebrow{font-family:var(--f-mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+
+/* header */
+header.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex; align-items:center; gap:24px; padding-block:12px}
+.logo{display:flex; align-items:center; gap:10px; font-family:var(--f-display); font-weight:800; font-size:20px; text-decoration:none}
+.logo svg{flex:none}
+nav.links{display:flex; gap:20px; margin-left:auto; font-size:15px}
+nav.links a{text-decoration:none; color:var(--muted)}
+nav.links a:hover{color:var(--ink)}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:10px; padding:11px 18px; font:700 15px/1.2 var(--f-body); cursor:pointer; text-decoration:none}
+.btn-accent{background:var(--accent); color:var(--on-accent)}
+.btn-accent:hover{filter:brightness(1.05)}
+.btn-ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--ink)}
+@media (max-width:760px){ nav.links{display:none} header.top .btn{margin-left:auto} }
+
+/* hero */
+.hero .wrap{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:48px; align-items:center; padding-block:56px 64px}
+.hero h1{font-size:clamp(38px, 5.4vw, 66px); font-weight:800; letter-spacing:-.02em}
+.hero h1 mark{background:linear-gradient(transparent 58%, color-mix(in srgb, var(--accent) 70%, transparent) 58%); color:inherit; padding:0 .05em}
+.hero p.lead{font-size:19px; color:var(--muted); max-width:34em; margin:22px 0 28px}
+.hero .ctas{display:flex; flex-wrap:wrap; gap:12px}
+.facts{display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:34px; padding:0; list-style:none; font-size:14px; color:var(--muted)}
+.facts li{display:flex; align-items:center; gap:8px}
+.facts li::before{content:""; width:8px; height:8px; border-radius:2px; background:var(--accent); flex:none}
+.langs{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px}
+@media (max-width:900px){ .hero .wrap{grid-template-columns:minmax(0,1fr); gap:40px; padding-block:36px 48px} }
+
+/* phone */
+.phone-col{display:flex; flex-direction:column; align-items:center; gap:14px}
+.phone{width:340px; max-width:100%; background:var(--phone); border-radius:44px; padding:12px; box-shadow:0 30px 60px -30px rgba(15,42,46,.55)}
+.screen{background:var(--surface); border-radius:34px; height:640px; overflow:hidden; display:flex; flex-direction:column; position:relative}
+.notch{height:26px; display:flex; justify-content:center; align-items:flex-end}
+.notch span{width:90px; height:6px; border-radius:6px; background:var(--line)}
+.apphead{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 18px 10px; border-bottom:1px solid var(--line)}
+.apphead .org{font-weight:700; font-size:14px}
+.apphead select{font:700 13px var(--f-body); background:var(--sunk); color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:5px 6px; max-width:132px}
+.appbody{flex:1; overflow-y:auto; padding:16px 18px; display:flex; flex-direction:column; gap:12px}
+.apptabs{display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line); font-size:12px; text-align:center}
+.apptabs div{padding:10px 4px 14px; color:var(--muted)}
+.apptabs div.on{color:var(--ink); font-weight:700; box-shadow:inset 0 3px 0 var(--accent)}
+.chip{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:4px 9px; border-radius:999px; background:var(--sunk); color:var(--muted); border:1px solid var(--line); white-space:nowrap}
+.hello{font-family:var(--f-display); font-size:26px; font-weight:800}
+[dir="rtl"] .hello{font-family:var(--f-body)}
+.lesson-card{background:var(--ink); color:var(--bg); border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:10px}
+.lesson-card .meta{font-size:13px; opacity:.75}
+.lesson-card .t{font-size:18px; font-weight:700; line-height:1.3}
+.lesson-card .btn{align-self:flex-start}
+.streak{display:flex; gap:5px; align-items:center; font-size:13px; color:var(--muted)}
+.streak i{width:22px; height:6px; border-radius:3px; background:var(--accent)}
+.streak i.off{background:var(--line)}
+.bigbtn{display:flex; align-items:center; gap:12px; width:100%; text-align:start; border-radius:14px; padding:14px; font:700 15px/1.3 var(--f-body); cursor:pointer; border:1.5px solid var(--line); background:var(--surface); color:var(--ink)}
+.bigbtn .ic{width:34px; height:34px; border-radius:10px; display:grid; place-items:center; flex:none; background:var(--sunk)}
+.bigbtn.sos{border-color:var(--danger); background:var(--danger-bg)}
+.bigbtn.sos .ic{background:var(--danger); color:#fff}
+.back{background:none; border:0; color:var(--muted); font:700 14px var(--f-body); cursor:pointer; padding:0; align-self:flex-start}
+.q{font-size:20px; font-weight:700; line-height:1.25}
+.sms{background:var(--sunk); border-radius:16px 16px 16px 4px; padding:12px 14px; font-size:14.5px; border:1px solid var(--line)}
+[dir="rtl"] .sms{border-radius:16px 16px 4px 16px}
+.sms .from{font-family:var(--f-mono); font-size:12px; color:var(--muted); margin-bottom:6px; direction:ltr; text-align:start}
+.sms .url{color:var(--teal); text-decoration:underline; word-break:break-all}
+.choices{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.choice{border:1.5px solid var(--line); border-radius:12px; padding:12px; font:700 16px var(--f-body); background:var(--surface); color:var(--ink); cursor:pointer}
+.choice:hover{border-color:var(--ink)}
+.result{border-radius:14px; padding:12px 14px; font-weight:700}
+.result.good{background:var(--ok-bg); color:var(--ok)}
+.result.bad{background:var(--warn-bg); color:var(--warn)}
+.flags{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; font-size:14.5px}
+.flags li{display:flex; gap:10px; align-items:flex-start}
+.flags b{flex:none; width:22px; height:22px; border-radius:6px; background:var(--danger); color:#fff; font-size:13px; display:grid; place-items:center}
+.tip{font-size:14px; color:var(--muted); border-inline-start:3px solid var(--accent); padding-inline-start:10px}
+.steps{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px}
+.steps label{display:flex; gap:10px; align-items:center; padding:11px 12px; border:1.5px solid var(--line); border-radius:12px; cursor:pointer; font-size:14.5px}
+.steps input{width:20px; height:20px; accent-color:var(--ok); flex:none}
+.calm{font-size:20px; font-weight:700; line-height:1.25}
+.optgrid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.opt{border:1.5px solid var(--line); border-radius:12px; padding:12px 8px; background:var(--surface); color:var(--ink); font:700 14px var(--f-body); cursor:pointer}
+.opt[aria-pressed="true"]{border-color:var(--accent); background:var(--warn-bg)}
+.field{width:100%; border:1.5px solid var(--line); border-radius:12px; padding:11px 12px; font:15px var(--f-body); background:var(--surface); color:var(--ink)}
+.done-box{display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px; padding-top:30px}
+.done-box .big{width:64px; height:64px; border-radius:50%; background:var(--ok-bg); color:var(--ok); display:grid; place-items:center}
+.check-res{border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; gap:6px; font-size:14px}
+.check-res.risky{background:var(--danger-bg)} .check-res.risky strong{color:var(--danger)}
+.check-res.safe{background:var(--ok-bg)} .check-res.safe strong{color:var(--ok)}
+.check-res ul{margin:0; padding-inline-start:18px}
+.demo-hint{font-size:13px; color:var(--muted); text-align:center; max-width:340px}
+
+/* sections */
+section.band{padding-block:72px; border-top:1px solid var(--line)}
+.sec-head{display:flex; flex-direction:column; gap:12px; max-width:720px; margin-bottom:36px}
+.sec-head h2{font-size:clamp(28px, 3.6vw, 42px); font-weight:800; letter-spacing:-.015em}
+.sec-head p{color:var(--muted); font-size:17px; margin:0}
+
+/* dashboard */
+.dash{background:var(--surface); border:1px solid var(--line); border-radius:20px; overflow:hidden}
+.dash-top{display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; padding:16px 20px; border-bottom:1px solid var(--line)}
+.dash-top h3{font-size:18px}
+.dash-top .chip{margin-left:auto}
+.kpis{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); border-bottom:1px solid var(--line)}
+.kpi{padding:18px 20px; border-right:1px solid var(--line); display:flex; flex-direction:column; gap:4px; min-width:0}
+.kpi:last-child{border-right:0}
+.kpi .v{font-family:var(--f-display); font-size:34px; font-weight:800; font-variant-numeric:tabular-nums}
+.kpi .l{font-size:13px; color:var(--muted)}
+.kpi .d{font-size:13px; font-weight:700}
+.kpi .d.good{color:var(--ok)}
+@media (max-width:800px){ .kpis{grid-template-columns:repeat(2, minmax(0,1fr))} .kpi:nth-child(2){border-right:0} .kpi:nth-child(-n+2){border-bottom:1px solid var(--line)} }
+.dash-grid{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+.dash-grid > div{padding:20px; min-width:0}
+.dash-grid > div + div{border-left:1px solid var(--line)}
+@media (max-width:900px){ .dash-grid{grid-template-columns:minmax(0,1fr)} .dash-grid > div + div{border-left:0; border-top:1px solid var(--line)} }
+.panel-t{font-weight:700; margin-bottom:4px}
+.panel-s{font-size:13px; color:var(--muted); margin-bottom:12px}
+.legend{display:flex; gap:16px; font-size:13px; color:var(--muted); margin-bottom:6px}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.legend i{width:14px; height:3px; border-radius:2px}
+.chart svg{width:100%; height:auto; display:block}
+.tablewrap{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:14px; font-variant-numeric:tabular-nums}
+th{font-family:var(--f-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:500; text-align:left; padding:8px 8px; border-bottom:1px solid var(--line); white-space:nowrap}
+td{padding:10px 8px; border-bottom:1px solid var(--line); white-space:nowrap}
+td.num, th.num{text-align:right}
+tr:last-child td{border-bottom:0}
+.site{font-weight:700}
+.site small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+.pill{display:inline-block; font-size:12px; font-weight:700; padding:3px 9px; border-radius:999px}
+.pill.ok{background:var(--ok-bg); color:var(--ok)}
+.pill.warn{background:var(--warn-bg); color:var(--warn)}
+.pill.crit{background:var(--danger-bg); color:var(--danger)}
+.report-row{display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding:16px 20px; border-top:1px solid var(--line); background:var(--sunk)}
+.report-row p{margin:0; font-size:14px; color:var(--muted); flex:1; min-width:220px}
+.report{margin:0 20px 20px; padding:18px; border:1px dashed var(--line); border-radius:14px; font-size:14px; background:var(--surface)}
+.report h4{margin:0 0 8px; font-family:var(--f-display); font-size:17px}
+.report dl{display:grid; grid-template-columns:max-content minmax(0,1fr); gap:6px 16px; margin:0}
+.report dt{color:var(--muted)}
+.report dd{margin:0}
+
+/* how */
+.how{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:32px; counter-reset:s}
+.how div{display:flex; flex-direction:column; gap:8px}
+.how .n{font-family:var(--f-mono); font-size:13px; color:var(--accent-ink)}
+.how h3{font-size:22px}
+.how p{margin:0; color:var(--muted)}
+@media (max-width:800px){ .how{grid-template-columns:minmax(0,1fr)} }
+
+.privacy{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:40px; align-items:start}
+.privacy ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:14px}
+.privacy li{display:flex; gap:12px}
+.privacy li svg{flex:none; margin-top:2px; color:var(--ok)}
+.privacy li strong{display:block}
+.privacy li span{color:var(--muted); font-size:15px}
+.roadmap{background:var(--ink); color:var(--bg); border-radius:20px; padding:26px; display:flex; flex-direction:column; gap:12px}
+.roadmap .eyebrow{color:var(--accent)}
+.roadmap h3{font-size:24px}
+.roadmap p{margin:0; opacity:.82}
+@media (max-width:800px){ .privacy{grid-template-columns:minmax(0,1fr)} }
+
+/* pricing */
+.plans{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; align-items:stretch}
+.plan{border:1px solid var(--line); border-radius:18px; padding:24px; display:flex; flex-direction:column; gap:12px; background:var(--surface)}
+.plan.main{border:2px solid var(--accent)}
+.plan h3{font-size:22px}
+.plan .for{font-size:14px; color:var(--muted); margin:0}
+.plan .price{font-family:var(--f-display); font-size:38px; font-weight:800; font-variant-numeric:tabular-nums}
+.plan .price small{font-family:var(--f-body); font-size:14px; font-weight:400; color:var(--muted)}
+.plan ul{margin:0; padding-inline-start:18px; display:flex; flex-direction:column; gap:6px; font-size:15px; flex:1}
+.plan .btn{margin-top:8px}
+.fine{font-size:13px; color:var(--muted); margin-top:14px}
+@media (max-width:900px){ .plans{grid-template-columns:minmax(0,1fr)} }
+
+/* contact */
+.contact{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:40px; align-items:start}
+.contact form{display:grid; grid-template-columns:1fr 1fr; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:22px}
+.contact label{display:flex; flex-direction:column; gap:6px; font-size:14px; font-weight:700}
+.contact label.full{grid-column:1 / -1}
+.contact .btn{grid-column:1 / -1}
+.formmsg{grid-column:1 / -1; font-size:14px; color:var(--ok); margin:0}
+@media (max-width:800px){ .contact{grid-template-columns:minmax(0,1fr)} .contact form{grid-template-columns:1fr} }
+footer{border-top:1px solid var(--line); padding-block:28px; font-size:13px; color:var(--muted)}
+footer .wrap{display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#start" aria-label="ShiftSafe Start">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 2 L26 6.5 V14 C26 21 21 26 15 28 C9 26 4 21 4 14 V6.5 Z" fill="var(--ink)"/><path d="M4 13 H26 V17 H4 Z" fill="var(--accent)"/><path d="M4 19.5 H25 V21.5 H5 Z" fill="var(--accent)" opacity=".7"/></svg>
+      ShiftSafe
+    </a>
+    <nav class="links" aria-label="Hauptnavigation">
+      <a href="#demo">Demo</a><a href="#dashboard">Dashboard</a><a href="#datenschutz">Datenschutz</a><a href="#preise">Preise</a>
+    </nav>
+    <a class="btn btn-accent" href="#pilot">Pilot anfragen</a>
+  </div>
+</header>
+
+<main id="start">
+<section class="hero" id="demo">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Security Awareness für Beschäftigte ohne Schreibtisch</div>
+      <h1 style="margin-top:14px">Phishing-Schutz für alle, die <mark>im Schichtdienst</mark> arbeiten.</h1>
+      <p class="lead">Pflegekräfte, Fahrerinnen, Lageristen und Servicekräfte haben keinen PC und keine Zeit für Schulungen. ShiftSafe trainiert sie in zwei Minuten auf dem Smartphone, in ihrer Sprache, direkt in der App, die sie schon nutzen.</p>
+      <div class="ctas">
+        <a class="btn btn-accent" href="#pilot">60-Tage-Pilot anfragen</a>
+        <a class="btn btn-ghost" href="#dashboard">Dashboard ansehen</a>
+      </div>
+      <ul class="facts">
+        <li>Läuft in Microsoft Teams und Mitarbeiter-Apps</li>
+        <li>Funktioniert auf geteilten Tablets</li>
+        <li>Liest keine privaten Nachrichten</li>
+      </ul>
+      <div class="langs" aria-label="Sprachen in der Demo">
+        <span class="chip">Deutsch</span><span class="chip">English</span><span class="chip">Türkçe</span><span class="chip">Polski</span><span class="chip">Українська</span><span class="chip">العربية</span><span class="chip">weitere folgen</span>
+      </div>
+    </div>
+
+    <div class="phone-col">
+      <div class="phone" role="region" aria-label="Interaktive Demo der Mitarbeiter-App">
+        <div class="screen" id="screen">
+          <div class="notch"><span></span></div>
+          <div class="apphead">
+            <span class="org" id="orgname">Mitarbeiter-App</span>
+            <label class="sr" for="lang" style="position:absolute;left:-9999px">Sprache</label>
+            <select id="lang" aria-label="Sprache wählen">
+              <option value="de">Deutsch</option><option value="en">English</option><option value="tr">Türkçe</option><option value="pl">Polski</option><option value="uk">Українська</option><option value="ar">العربية</option>
+            </select>
+          </div>
+          <div class="appbody" id="appbody"></div>
+          <div class="apptabs"><div id="tab1"></div><div id="tab2"></div><div class="on" id="tab3"></div></div>
+        </div>
+      </div>
+      <p class="demo-hint">Probieren Sie es aus: Sprache wechseln, Training starten, den Notfallknopf drücken oder einen Link prüfen.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="dashboard">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Für IT-Sicherheit und Geschäftsführung</div>
+      <h2>Sehen, wo das Risiko sitzt. Nachweisen, was getan wurde.</h2>
+      <p>Ein Überblick über alle Standorte, Länder und Sprachen. Ausgewertet wird nur anonym und ab fünf Personen pro Gruppe, nie auf einzelne Mitarbeitende.</p>
+    </div>
+
+    <div class="dash">
+      <div class="dash-top">
+        <h3>Beispiel: Pflege- und Klinikgruppe</h3>
+        <span class="chip">14.200 Beschäftigte · 6 Länder</span>
+        <span class="chip">Beispieldaten</span>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="l">Klickrate in Phishing-Simulationen</span><span class="v">7 %</span><span class="d good">von 21 % im Mai</span></div>
+        <div class="kpi"><span class="l">Melderate verdächtiger Nachrichten</span><span class="v">64 %</span><span class="d good">von 12 % im Mai</span></div>
+        <div class="kpi"><span class="l">Trainings abgeschlossen (Oktober)</span><span class="v">82 %</span><span class="d">Ø 1:54 Min. pro Training</span></div>
+        <div class="kpi"><span class="l">Genutzte Sprachen</span><span class="v">11</span><span class="d">größte: DE, PL, ES, TR</span></div>
+      </div>
+      <div class="dash-grid">
+        <div class="chart">
+          <div class="panel-t">Weniger Klicks, mehr Meldungen</div>
+          <div class="panel-s">Anteil der Beschäftigten pro Monat, Mai bis Oktober 2026</div>
+          <div class="legend"><span><i style="background:var(--danger)"></i>Klickrate</span><span><i style="background:var(--teal)"></i>Melderate</span></div>
+          <svg id="chart" viewBox="0 0 560 250" role="img" aria-label="Liniendiagramm: Klickrate sinkt von 21 auf 7 Prozent, Melderate steigt von 12 auf 64 Prozent"></svg>
+        </div>
+        <div>
+          <div class="panel-t">Standorte</div>
+          <div class="panel-s">Sortiert nach Handlungsbedarf</div>
+          <div class="tablewrap">
+            <table>
+              <thead><tr><th>Standort</th><th class="num">Klicks</th><th class="num">Meldungen</th><th>Status</th></tr></thead>
+              <tbody id="sites"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="report-row">
+        <p>Ein Klick erzeugt den Nachweis für Audits, Cyber-Versicherung und Aufsicht.</p>
+        <button class="btn btn-accent" id="mkreport" type="button">Nachweis-Bericht erstellen</button>
+      </div>
+      <div class="report" id="report" hidden>
+        <h4>Nachweis Security Awareness · 01.05.–31.10.2026</h4>
+        <dl>
+          <dt>Organisation</dt><dd>Pflege- und Klinikgruppe (Beispiel), 14.200 Beschäftigte</dd>
+          <dt>Abgedeckt</dt><dd>ISO/IEC 27001:2022, Anhang A 6.3 (Sensibilisierung und Schulung) · NIS2-Richtlinie, Art. 21 Abs. 2 g (Cyberhygiene und Schulungen)</dd>
+          <dt>Teilnahme</dt><dd>11.644 Personen mit mindestens einem Training im Oktober (82 %)</dd>
+          <dt>Wirksamkeit</dt><dd>Klickrate 21 % → 7 %, Melderate 12 % → 64 %</dd>
+          <dt>Offene Punkte</dt><dd>Klinik Valencia und Pflegezentrum Wrocław: zusätzliche Trainings in Spanisch und Polnisch eingeplant</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">So läuft die Einführung</div>
+      <h2>In zwei Wochen live, ohne neue Geräte.</h2>
+    </div>
+    <div class="how">
+      <div><span class="n">Schritt 1 · Woche 1</span><h3>Einbinden</h3><p>ShiftSafe kommt als Baustein in Microsoft Teams oder Ihre Mitarbeiter-App. Für Wohngruppen und Stationen gibt es einen Modus für geteilte Tablets ohne Anmeldung.</p></div>
+      <div><span class="n">Schritt 2 · ab Woche 2</span><h3>Im Alltag lernen</h3><p>Zwei Trainings pro Woche à zwei Minuten, mit echten Situationen aus Pflege, Lager oder Service. Automatisch übersetzt und an die Kultur angepasst.</p></div>
+      <div><span class="n">Schritt 3 · laufend</span><h3>Messen und nachweisen</h3><p>Faire Phishing-Simulationen zeigen den Fortschritt. Der Bericht für Audit und Versicherung entsteht auf Knopfdruck.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="datenschutz">
+  <div class="wrap privacy">
+    <div>
+      <div class="sec-head" style="margin-bottom:24px">
+        <div class="eyebrow">Datenschutz und Mitbestimmung</div>
+        <h2>Gebaut für Betriebsrat und DSGVO.</h2>
+      </div>
+      <ul>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Keine Überwachung</strong><span>ShiftSafe liest keine SMS, Chats oder E-Mails. Mitarbeitende entscheiden selbst, was sie prüfen oder melden.</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Nur anonyme Auswertungen</strong><span>Ergebnisse erscheinen erst ab fünf Personen pro Gruppe. Niemand wird bloßgestellt.</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Fehler dürfen passieren</strong><span>Wer klickt, bekommt Hilfe statt Ärger. So wird schneller gemeldet und Schaden begrenzt.</span></div></li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Vorlagen für die Mitbestimmung</strong><span>Muster für Betriebsvereinbarung und Datenschutz-Folgenabschätzung sind enthalten.</span></div></li>
+      </ul>
+    </div>
+    <div class="roadmap">
+      <span class="eyebrow">Als Nächstes</span>
+      <h3>Link-Check im Moment der Gefahr</h3>
+      <p>Mitarbeitende teilen einen verdächtigen Link oder QR-Code mit ShiftSafe und sehen sofort, ob er gefährlich ist, mit einer kurzen Erklärung in ihrer Sprache. In der Demo oben schon zum Ausprobieren.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="preise">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Preise</div>
+      <h2>Pro Person und Monat, ohne Einrichtungsgebühr.</h2>
+    </div>
+    <div class="plans">
+      <div class="plan main">
+        <h3>Enterprise</h3>
+        <p class="for">Für Unternehmen ab 1.000 Beschäftigten in mehreren Ländern</p>
+        <div class="price">2,50 € <small>/ Person / Monat</small></div>
+        <ul><li>Alle Sprachen und Branchen-Szenarien</li><li>Integration in Teams und Mitarbeiter-Apps</li><li>Dashboard für alle Standorte</li><li>Nachweis-Berichte für Audits</li><li>Phishing-Simulationen</li><li>Persönliche Einführung</li></ul>
+        <a class="btn btn-accent" href="#pilot">Pilot anfragen</a>
+      </div>
+      <div class="plan">
+        <h3>Social Edition</h3>
+        <p class="for">Für gemeinnützige Träger in Pflege, Jugendhilfe und Eingliederungshilfe</p>
+        <div class="price">0,60 € <small>/ Person / Monat</small></div>
+        <ul><li>Trainings in allen Sprachen</li><li>Notfallknopf und Meldefunktion</li><li>Modus für geteilte Tablets</li><li>Basis-Dashboard</li></ul>
+        <a class="btn btn-ghost" href="#pilot">Anfragen</a>
+      </div>
+      <div class="plan">
+        <h3>Pilot</h3>
+        <p class="for">Ein Standort, bis 200 Beschäftigte</p>
+        <div class="price">0 € <small>für 60 Tage</small></div>
+        <ul><li>Voller Funktionsumfang</li><li>Messung vorher und nachher</li><li>Ergebnisbericht für die Geschäftsführung</li></ul>
+        <a class="btn btn-ghost" href="#pilot">Pilot starten</a>
+      </div>
+    </div>
+    <p class="fine">Richtpreise zzgl. MwSt. bei jährlicher Abrechnung.</p>
+  </div>
+</section>
+
+<section class="band" id="pilot">
+  <div class="wrap contact">
+    <div class="sec-head">
+      <div class="eyebrow">Pilot anfragen</div>
+      <h2>Testen Sie ShiftSafe 60 Tage an einem Standort.</h2>
+      <p>Wir messen die Klickrate vorher und nachher. Danach entscheiden Sie anhand Ihrer eigenen Zahlen.</p>
+    </div>
+    <form id="pilotform" novalidate>
+      <label for="f-name">Name<input class="field" id="f-name" required></label>
+      <label for="f-org">Organisation<input class="field" id="f-org" required></label>
+      <label for="f-mail">E-Mail<input class="field" id="f-mail" type="email" required></label>
+      <label for="f-size">Beschäftigte<select class="field" id="f-size"><option>unter 500</option><option>500–2.000</option><option>2.000–10.000</option><option>über 10.000</option></select></label>
+      <label class="full" for="f-msg">Branche und Länder<input class="field" id="f-msg" placeholder="z. B. Pflege, Deutschland und Polen"></label>
+      <button class="btn btn-accent" type="submit">Anfrage absenden</button>
+      <p class="formmsg" id="formmsg" hidden></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 ShiftSafe · Prototyp</span><span>Security Awareness für Beschäftigte ohne Schreibtisch</span></div></footer>
+
+<script>
+const URL_TXT = "dienstplan-bestaetigen.info/s/7x";
+const T = {
+ de:{dir:"ltr",org:"Mitarbeiter-App",tabs:["Neuigkeiten","Dienstplan","Sicherheit"],hello:"Hallo!",sub:"Dein Training für heute · 2 Min.",lesson:"Falsche Dienstplan-SMS erkennen",start:"Training starten",streak:"5 Trainings in Folge",report:"Etwas Verdächtiges melden",check:"Link oder QR-Code prüfen",clicked:"Ich habe geklickt – Hilfe!",shared:"Geteiltes Gerät · keine Anmeldung nötig",back:"‹ Zurück",q:"Ist diese Nachricht echt?",sms:"Dienstplan-Änderung: Bestätige deine Schicht bis 18:00 Uhr, sonst wird sie gestrichen.",real:"Echt",scam:"Betrug",correct:"Richtig erkannt! Das ist Betrug.",wrong:"Vorsicht! Das ist Betrug.",flagsT:"Daran erkennst du es:",f:["Unbekannte Nummer aus dem Ausland","Zeitdruck: „bis 18:00 Uhr, sonst …“","Der Link führt nicht zu eurer echten Dienstplan-App"],tip:"Merke: Dienstplan-Änderungen kommen nur über die offizielle App.",done:"Fertig",calm:"Kein Problem. Wir machen das zusammen.",em:["Internet trennen (WLAN aus)","Keine Daten oder Passwörter mehr eingeben","Passwort an einem anderen Gerät ändern"],emSend:"IT-Sicherheit jetzt informieren",emDone:"IT-Sicherheit ist informiert und meldet sich bei dir.",emNote:"Gut, dass du es sofort gemeldet hast. Das schützt alle.",repT:"Was kam dir verdächtig vor?",opts:["SMS","E-Mail","Anruf","QR-Code"],repPh:"Kurz beschreiben (optional)",repSend:"Melden",repThanks:"Danke! Du hast dein Team geschützt.",chkT:"Link prüfen, bevor du ihn öffnest",chkBtn:"Prüfen",risky:"Gefährlich – nicht öffnen",safe:"Bekannte Adresse eurer Organisation",r:{unknown:"Unbekannte Adresse",words:"Wörter wie „login“ oder „bestätigen“",http:"Keine sichere Verbindung (http)",short:"Verkürzter Link versteckt das Ziel",ip:"Zahlen statt Name in der Adresse"}},
+ en:{dir:"ltr",org:"Staff App",tabs:["News","Schedule","Safety"],hello:"Hi there!",sub:"Your training for today · 2 min",lesson:"Spot a fake shift-schedule text",start:"Start training",streak:"5 trainings in a row",report:"Report something suspicious",check:"Check a link or QR code",clicked:"I clicked – help!",shared:"Shared device · no sign-in needed",back:"‹ Back",q:"Is this message real?",sms:"Schedule change: confirm your shift by 6 pm or it will be cancelled.",real:"Real",scam:"Scam",correct:"Well spotted! This is a scam.",wrong:"Careful! This is a scam.",flagsT:"How to tell:",f:["Unknown number from abroad","Time pressure: “by 6 pm or …”","The link doesn't go to your real scheduling app"],tip:"Remember: schedule changes only come through the official app.",done:"Done",calm:"Don't worry. We'll handle this together.",em:["Disconnect from the internet (Wi-Fi off)","Don't enter any more data or passwords","Change your password on another device"],emSend:"Tell IT security now",emDone:"IT security has been told and will contact you.",emNote:"Reporting it right away was the right call. It protects everyone.",repT:"What looked suspicious?",opts:["Text message","Email","Phone call","QR code"],repPh:"Describe it briefly (optional)",repSend:"Report",repThanks:"Thank you! You protected your team.",chkT:"Check a link before you open it",chkBtn:"Check",risky:"Dangerous – do not open",safe:"Known address of your organisation",r:{unknown:"Unknown address",words:"Words like “login” or “confirm”",http:"No secure connection (http)",short:"Short link hides the real target",ip:"Numbers instead of a name in the address"}},
+ tr:{dir:"ltr",org:"Çalışan Uygulaması",tabs:["Haberler","Vardiya","Güvenlik"],hello:"Merhaba!",sub:"Bugünkü eğitimin · 2 dk.",lesson:"Sahte vardiya SMS'ini tanı",start:"Eğitimi başlat",streak:"Üst üste 5 eğitim",report:"Şüpheli bir şey bildir",check:"Bağlantı veya QR kodu kontrol et",clicked:"Tıkladım – yardım!",shared:"Ortak cihaz · giriş gerekmez",back:"‹ Geri",q:"Bu mesaj gerçek mi?",sms:"Vardiya değişikliği: Vardiyanı saat 18:00'e kadar onayla, yoksa iptal edilecek.",real:"Gerçek",scam:"Dolandırıcılık",correct:"Doğru! Bu bir dolandırıcılık.",wrong:"Dikkat! Bu bir dolandırıcılık.",flagsT:"Bunu şuradan anlarsın:",f:["Yurt dışından bilinmeyen numara","Zaman baskısı: „18:00'e kadar, yoksa …“","Bağlantı gerçek vardiya uygulamanıza gitmiyor"],tip:"Unutma: Vardiya değişiklikleri yalnızca resmi uygulamadan gelir.",done:"Tamam",calm:"Sorun değil. Bunu birlikte halledeceğiz.",em:["İnternet bağlantısını kes (Wi-Fi kapat)","Artık veri veya şifre girme","Şifreni başka bir cihazdan değiştir"],emSend:"BT güvenliğini şimdi bilgilendir",emDone:"BT güvenliği bilgilendirildi ve seninle iletişime geçecek.",emNote:"Hemen bildirmen çok iyi. Bu herkesi korur.",repT:"Sana ne şüpheli geldi?",opts:["SMS","E-posta","Arama","QR kod"],repPh:"Kısaca anlat (isteğe bağlı)",repSend:"Bildir",repThanks:"Teşekkürler! Ekibini korudun.",chkT:"Açmadan önce bağlantıyı kontrol et",chkBtn:"Kontrol et",risky:"Tehlikeli – açma",safe:"Kurumunuzun bilinen adresi",r:{unknown:"Bilinmeyen adres",words:"„login“ veya „onayla“ gibi kelimeler",http:"Güvenli bağlantı yok (http)",short:"Kısaltılmış bağlantı hedefi gizliyor",ip:"Adreste isim yerine rakamlar"}},
+ pl:{dir:"ltr",org:"Aplikacja pracownicza",tabs:["Aktualności","Grafik","Bezpieczeństwo"],hello:"Cześć!",sub:"Twój trening na dziś · 2 min",lesson:"Rozpoznaj fałszywy SMS o grafiku",start:"Rozpocznij trening",streak:"5 treningów z rzędu",report:"Zgłoś coś podejrzanego",check:"Sprawdź link lub kod QR",clicked:"Kliknąłem/-am – pomocy!",shared:"Wspólne urządzenie · bez logowania",back:"‹ Wstecz",q:"Czy ta wiadomość jest prawdziwa?",sms:"Zmiana grafiku: potwierdź swoją zmianę do 18:00, inaczej zostanie usunięta.",real:"Prawdziwa",scam:"Oszustwo",correct:"Dobrze! To oszustwo.",wrong:"Uwaga! To oszustwo.",flagsT:"Po czym to poznać:",f:["Nieznany numer z zagranicy","Presja czasu: „do 18:00, inaczej …“","Link nie prowadzi do waszej prawdziwej aplikacji z grafikiem"],tip:"Pamiętaj: zmiany grafiku przychodzą tylko przez oficjalną aplikację.",done:"Gotowe",calm:"Spokojnie. Zrobimy to razem.",em:["Odłącz internet (wyłącz Wi-Fi)","Nie wpisuj już żadnych danych ani haseł","Zmień hasło na innym urządzeniu"],emSend:"Poinformuj teraz dział bezpieczeństwa IT",emDone:"Dział bezpieczeństwa IT został poinformowany i skontaktuje się z Tobą.",emNote:"Dobrze, że od razu to zgłosiłeś/-aś. To chroni wszystkich.",repT:"Co wydało Ci się podejrzane?",opts:["SMS","E-mail","Telefon","Kod QR"],repPh:"Opisz krótko (opcjonalnie)",repSend:"Zgłoś",repThanks:"Dziękujemy! Ochroniłeś/-aś swój zespół.",chkT:"Sprawdź link, zanim go otworzysz",chkBtn:"Sprawdź",risky:"Niebezpieczny – nie otwieraj",safe:"Znany adres Twojej organizacji",r:{unknown:"Nieznany adres",words:"Słowa takie jak „login” lub „potwierdź”",http:"Brak bezpiecznego połączenia (http)",short:"Skrócony link ukrywa cel",ip:"Cyfry zamiast nazwy w adresie"}},
+ uk:{dir:"ltr",org:"Застосунок для працівників",tabs:["Новини","Графік","Безпека"],hello:"Привіт!",sub:"Твоє тренування на сьогодні · 2 хв",lesson:"Розпізнай фальшиве SMS про графік",start:"Почати тренування",streak:"5 тренувань поспіль",report:"Повідомити про щось підозріле",check:"Перевірити посилання або QR-код",clicked:"Я натиснув(-ла) – допоможіть!",shared:"Спільний пристрій · вхід не потрібен",back:"‹ Назад",q:"Це повідомлення справжнє?",sms:"Зміна графіка: підтверди свою зміну до 18:00, інакше її буде скасовано.",real:"Справжнє",scam:"Шахрайство",correct:"Правильно! Це шахрайство.",wrong:"Обережно! Це шахрайство.",flagsT:"Як це розпізнати:",f:["Невідомий номер з-за кордону","Тиск часу: «до 18:00, інакше …»","Посилання веде не до вашого справжнього застосунку з графіком"],tip:"Пам'ятай: зміни графіка надходять лише через офіційний застосунок.",done:"Готово",calm:"Нічого страшного. Зробимо це разом.",em:["Вимкни інтернет (вимкни Wi-Fi)","Більше не вводь жодних даних чи паролів","Зміни пароль на іншому пристрої"],emSend:"Повідомити службу ІТ-безпеки зараз",emDone:"Службу ІТ-безпеки повідомлено, з тобою зв'яжуться.",emNote:"Добре, що ти одразу повідомив(-ла). Це захищає всіх.",repT:"Що здалося тобі підозрілим?",opts:["SMS","Email","Дзвінок","QR-код"],repPh:"Коротко опиши (необов'язково)",repSend:"Повідомити",repThanks:"Дякуємо! Ти захистив(-ла) свою команду.",chkT:"Перевір посилання, перш ніж відкрити",chkBtn:"Перевірити",risky:"Небезпечно – не відкривай",safe:"Відома адреса вашої організації",r:{unknown:"Невідома адреса",words:"Слова на кшталт «login» або «підтвердити»",http:"Немає захищеного з'єднання (http)",short:"Скорочене посилання приховує мету",ip:"Цифри замість назви в адресі"}},
+ ar:{dir:"rtl",org:"تطبيق الموظفين",tabs:["الأخبار","المناوبات","الأمان"],hello:"مرحبًا!",sub:"تدريبك اليوم · دقيقتان",lesson:"اكتشف رسالة المناوبات المزيفة",start:"ابدأ التدريب",streak:"5 تدريبات متتالية",report:"الإبلاغ عن شيء مريب",check:"فحص رابط أو رمز QR",clicked:"لقد نقرت – ساعدوني!",shared:"جهاز مشترك · لا حاجة لتسجيل الدخول",back:"› رجوع",q:"هل هذه الرسالة حقيقية؟",sms:"تغيير في جدول المناوبات: أكّد مناوبتك قبل الساعة 18:00، وإلا سيتم إلغاؤها.",real:"حقيقية",scam:"احتيال",correct:"أحسنت! هذه رسالة احتيال.",wrong:"انتبه! هذه رسالة احتيال.",flagsT:"كيف تعرف ذلك:",f:["رقم مجهول من الخارج","ضغط الوقت: «قبل 18:00، وإلا …»","الرابط لا يؤدي إلى تطبيق المناوبات الحقيقي"],tip:"تذكّر: تغييرات المناوبات تصل فقط عبر التطبيق الرسمي.",done:"تم",calm:"لا تقلق. سنتعامل مع الأمر معًا.",em:["افصل الإنترنت (أوقف الواي فاي)","لا تُدخل أي بيانات أو كلمات مرور بعد الآن","غيّر كلمة المرور من جهاز آخر"],emSend:"أبلغ فريق أمن المعلومات الآن",emDone:"تم إبلاغ فريق أمن المعلومات وسيتواصل معك.",emNote:"أحسنت بالإبلاغ فورًا. هذا يحمي الجميع.",repT:"ما الذي بدا لك مريبًا؟",opts:["رسالة SMS","بريد إلكتروني","مكالمة","رمز QR"],repPh:"صف الأمر باختصار (اختياري)",repSend:"إبلاغ",repThanks:"شكرًا لك! لقد حميت فريقك.",chkT:"افحص الرابط قبل فتحه",chkBtn:"فحص",risky:"خطير – لا تفتحه",safe:"عنوان معروف لمؤسستك",r:{unknown:"عنوان غير معروف",words:"كلمات مثل «login» أو «تأكيد»",http:"لا يوجد اتصال آمن (http)",short:"الرابط المختصر يخفي الوجهة",ip:"أرقام بدل الاسم في العنوان"}}
+};
+
+const ICON = {
+  play:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>',
+  flag:'<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 16V2.5M4 3h9l-2 3.2 2 3.3H4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+  link:'<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7.5 10.5l3-3M6 8.5L4.3 10.2a2.5 2.5 0 003.5 3.5L9.5 12M12 9.5l1.7-1.7a2.5 2.5 0 00-3.5-3.5L8.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  sos:'<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v7M9 13.5v.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  ok:'<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M7 15.5l5.5 5.5L23 9.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+
+let lang = "de";
+try { const s = localStorage.getItem("ss-lang"); if (s && T[s]) lang = s; } catch(e){}
+let view = "home", answer = null, emChecks = [false,false,false], emSent = false, repKind = null, repSent = false, chkVal = "http://bit.ly/3xSchicht-login", chkRes = null;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function analyse(u){
+  const s = u.trim().toLowerCase(); const reasons = [];
+  const host = (s.replace(/^[a-z]+:\/\//,"").split(/[\/?#]/)[0] || "");
+  const trusted = ["beispiel-pflege.de","teams.microsoft.com"];
+  const isTrusted = trusted.some(t => host === t || host.endsWith("."+t));
+  if (/^http:\/\//.test(s)) reasons.push("http");
+  if (/^(bit\.ly|tinyurl\.com|t\.co|goo\.gl|is\.gd|ow\.ly|cutt\.ly)$/.test(host)) reasons.push("short");
+  if (/^\d{1,3}(\.\d{1,3}){3}(:\d+)?$/.test(host)) reasons.push("ip");
+  if (/(login|verify|bestaetig|bestätig|confirm|passwort|password|konto|account)/.test(s)) reasons.push("words");
+  if (!isTrusted && host) reasons.push("unknown");
+  return { safe: isTrusted && reasons.length === 0, reasons };
+}
+
+function render(){
+  const t = T[lang]; const b = $("appbody");
+  $("screen").setAttribute("dir", t.dir); $("screen").setAttribute("lang", lang);
+  $("orgname").textContent = t.org;
+  $("tab1").textContent = t.tabs[0]; $("tab2").textContent = t.tabs[1]; $("tab3").textContent = t.tabs[2];
+  let h = "";
+  if (view === "home"){
+    h = `<span class="chip">${esc(t.shared)}</span>
+      <div class="hello">${esc(t.hello)}</div>
+      <div class="lesson-card"><span class="meta">${esc(t.sub)}</span><span class="t">${esc(t.lesson)}</span>
+        <button class="btn btn-accent" data-go="lesson" type="button">${ICON.play}${esc(t.start)}</button></div>
+      <div class="streak"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i>&nbsp;${esc(t.streak)}</div>
+      <button class="bigbtn" data-go="rep" type="button"><span class="ic">${ICON.flag}</span>${esc(t.report)}</button>
+      <button class="bigbtn" data-go="check" type="button"><span class="ic">${ICON.link}</span>${esc(t.check)}</button>
+      <button class="bigbtn sos" data-go="em" type="button"><span class="ic">${ICON.sos}</span>${esc(t.clicked)}</button>`;
+  } else if (view === "lesson"){
+    h = `<button class="back" data-go="home" type="button">${esc(t.back)}</button>
+      <div class="q">${esc(t.q)}</div>
+      <div class="sms"><div class="from">SMS · +44 7700 900123</div>${esc(t.sms)} <bdi class="url" dir="ltr">${URL_TXT}</bdi></div>`;
+    if (answer === null){
+      h += `<div class="choices"><button class="choice" data-ans="real" type="button">${esc(t.real)}</button><button class="choice" data-ans="scam" type="button">${esc(t.scam)}</button></div>`;
+    } else {
+      h += `<div class="result ${answer==="scam"?"good":"bad"}">${esc(answer==="scam"?t.correct:t.wrong)}</div>
+        <div style="font-weight:700">${esc(t.flagsT)}</div>
+        <ul class="flags">${t.f.map((x,i)=>`<li><b>${i+1}</b><span>${esc(x)}</span></li>`).join("")}</ul>
+        <div class="tip">${esc(t.tip)}</div>
+        <button class="btn btn-accent" data-go="home" data-reset="1" type="button">${esc(t.done)}</button>`;
+    }
+  } else if (view === "em"){
+    if (!emSent){
+      h = `<button class="back" data-go="home" type="button">${esc(t.back)}</button>
+        <div class="calm">${esc(t.calm)}</div>
+        <ul class="steps">${t.em.map((x,i)=>`<li><label for="em${i}"><input type="checkbox" id="em${i}" data-em="${i}" ${emChecks[i]?"checked":""}>${esc(x)}</label></li>`).join("")}</ul>
+        <button class="btn btn-accent" id="emsend" type="button" style="background:var(--danger);color:#fff">${esc(t.emSend)}</button>`;
+    } else {
+      h = `<div class="done-box"><div class="big">${ICON.ok}</div><div class="calm">${esc(t.emDone)}</div><p style="margin:0;color:var(--muted)">${esc(t.emNote)}</p>
+        <button class="btn btn-ghost" data-go="home" data-reset="1" type="button">${esc(t.done)}</button></div>`;
+    }
+  } else if (view === "rep"){
+    if (!repSent){
+      h = `<button class="back" data-go="home" type="button">${esc(t.back)}</button>
+        <div class="q">${esc(t.repT)}</div>
+        <div class="optgrid">${t.opts.map((x,i)=>`<button class="opt" type="button" data-kind="${i}" aria-pressed="${repKind===i}">${esc(x)}</button>`).join("")}</div>
+        <input class="field" id="repnote" placeholder="${esc(t.repPh)}">
+        <button class="btn btn-accent" id="repsend" type="button">${esc(t.repSend)}</button>`;
+    } else {
+      h = `<div class="done-box"><div class="big">${ICON.ok}</div><div class="calm">${esc(t.repThanks)}</div>
+        <button class="btn btn-ghost" data-go="home" data-reset="1" type="button">${esc(t.done)}</button></div>`;
+    }
+  } else if (view === "check"){
+    h = `<button class="back" data-go="home" type="button">${esc(t.back)}</button>
+      <div class="q">${esc(t.chkT)}</div>
+      <input class="field" id="chkinput" dir="ltr" value="${esc(chkVal)}" aria-label="Link">
+      <button class="btn btn-accent" id="chkbtn" type="button">${esc(t.chkBtn)}</button>`;
+    if (chkRes){
+      h += chkRes.safe
+        ? `<div class="check-res safe"><strong>${esc(t.safe)}</strong></div>`
+        : `<div class="check-res risky"><strong>${esc(t.risky)}</strong><ul>${chkRes.reasons.map(r=>`<li>${esc(t.r[r])}</li>`).join("")}</ul></div>`;
+    }
+  }
+  b.innerHTML = h; b.scrollTop = 0;
+}
+
+$("appbody").addEventListener("click", e => {
+  const go = e.target.closest("[data-go]");
+  if (go){ if (go.dataset.reset){ answer=null; emChecks=[false,false,false]; emSent=false; repKind=null; repSent=false; chkRes=null; } view = go.dataset.go; render(); return; }
+  const ans = e.target.closest("[data-ans]"); if (ans){ answer = ans.dataset.ans; render(); return; }
+  const kind = e.target.closest("[data-kind]"); if (kind){ repKind = +kind.dataset.kind; render(); return; }
+  if (e.target.closest("#emsend")){ emSent = true; render(); return; }
+  if (e.target.closest("#repsend")){ repSent = true; render(); return; }
+  if (e.target.closest("#chkbtn")){ chkVal = $("chkinput").value; chkRes = analyse(chkVal); render(); return; }
+});
+$("appbody").addEventListener("change", e => { if (e.target.dataset.em !== undefined) emChecks[+e.target.dataset.em] = e.target.checked; });
+$("lang").value = lang;
+$("lang").addEventListener("change", e => { lang = e.target.value; try{ localStorage.setItem("ss-lang", lang); }catch(err){} render(); });
+render();
+
+/* dashboard */
+const sites = [
+  ["Klinik Valencia","Spanien · ES, EN",14,31,"crit","Handeln"],
+  ["Pflegezentrum Wrocław","Polen · PL, UK",11,46,"warn","Beobachten"],
+  ["Ambulanter Dienst Berlin","Deutschland · DE, TR, AR",8,59,"warn","Beobachten"],
+  ["Wohnpark Rotterdam","Niederlande · NL, EN",6,68,"ok","Gut"],
+  ["Klinik Wien","Österreich · DE, BS",5,72,"ok","Gut"],
+  ["Pflegeheim Köln","Deutschland · DE, PL, TR",4,77,"ok","Gut"]
+];
+$("sites").innerHTML = sites.map(s=>`<tr><td class="site">${s[0]}<small>${s[1]}</small></td><td class="num">${s[2]} %</td><td class="num">${s[3]} %</td><td><span class="pill ${s[4]}">${s[5]}</span></td></tr>`).join("");
+
+(function chart(){
+  const months = ["Mai","Jun","Jul","Aug","Sep","Okt"], click=[21,17,14,11,9,7], rep=[12,25,38,49,58,64];
+  const W=560,H=250,L=40,R=46,Tp=14,B=30, max=80;
+  const x = i => L + i*(W-L-R)/(months.length-1), y = v => Tp + (1-v/max)*(H-Tp-B);
+  let s = "";
+  [0,20,40,60,80].forEach(v=>{ s += `<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--f-mono)">${v}%</text>`; });
+  months.forEach((m,i)=>{ s += `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--f-mono)">${m}</text>`; });
+  const line = (d,c) => {
+    const pts = d.map((v,i)=>`${x(i)},${y(v)}`).join(" ");
+    const area = `${x(0)},${y(0)} ${pts} ${x(d.length-1)},${y(0)}`;
+    const n=d.length-1;
+    return `<polygon points="${area}" fill="${c}" opacity=".08"/><polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`+
+      d.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="${i===n?5:2.5}" fill="${i===n?c:"var(--surface)"}" stroke="${c}" stroke-width="2"/>`).join("")+
+      `<text x="${x(n)+10}" y="${y(d[n])+4}" font-size="13" font-weight="700" fill="${c}" font-family="var(--f-body)">${d[n]} %</text>`;
+  };
+  s += line(click,"var(--danger)") + line(rep,"var(--teal)");
+  $("chart").innerHTML = s;
+})();
+
+$("mkreport").addEventListener("click", () => { $("report").hidden = false; $("mkreport").textContent = "Bericht erstellt"; });
+$("pilotform").addEventListener("submit", e => {
+  e.preventDefault();
+  const m = $("formmsg"); const ok = $("f-name").value.trim() && $("f-org").value.trim() && /\S+@\S+\.\S+/.test($("f-mail").value);
+  m.hidden = false;
+  m.style.color = ok ? "var(--ok)" : "var(--danger)";
+  m.textContent = ok ? "Danke! In diesem Prototyp wird die Anfrage noch nicht versendet." : "Bitte Name, Organisation und eine gültige E-Mail-Adresse eintragen.";
+});
+</script>
